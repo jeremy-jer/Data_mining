@@ -1,0 +1,21 @@
+ID,Name,Age,Gender,Income,Marital_Status,Occupation,Education,Residence,Number_of_Children
+1,John Doe,34,Male,55000,Single,Engineer,Bachelor,Urban,0
+2,Jane Smith,28,Female,48000,Married,Teacher,Master,Suburban,2
+3,Bob Johnson,45,Male,62000,Married,Manager,Bachelor,Rural,3
+4,Emily Davis,23,Female,35000,Single,Student,Bachelor,Urban,0
+5,Michael Brown,36,Male,72000,Divorced,Consultant,Master,Suburban,1
+6,Sarah Wilson,29,Female,54000,Married,Designer,Bachelor,Urban,0
+7,David Lee,50,Male,96000,Married,Director,PhD,Suburban,4
+8,Laura White,39,Female,67000,Single,Analyst,Master,Rural,1
+9,James Harris,31,Male,58000,Single,Developer,Bachelor,Urban,0
+10,Mary Clark,44,Female,49000,Divorced,Nurse,Associate,Rural,2
+11,Robert Lewis,27,Male,52000,Married,Technician,Bachelor,Suburban,1
+12,Patricia Young,35,Female,60000,Married,Scientist,PhD,Urban,3
+13,Charles Hall,41,Male,80000,Single,Entrepreneur,Master,Urban,2
+14,Elizabeth King,33,Female,45000,Single,Artist,Bachelor,Rural,0
+15,George Wright,46,Male,75000,Married,Lawyer,PhD,Suburban,3
+16,Amy Scott,25,Female,39000,Single,Journalist,Bachelor,Urban,0
+17,Edward Green,38,Male,69000,Married,Architect,Master,Suburban,2
+18,Michelle Adams,30,Female,53000,Divorced,Chef,Associate,Rural,1
+19,Kevin Baker,43,Male,85000,Married,Doctor,PhD,Urban,3
+20,Angela Mitchell,37,Female,63000,Married,Pharmacist,Master,Suburban,2
