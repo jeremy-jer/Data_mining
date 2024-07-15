@@ -8,12 +8,28 @@ print(df)
 print('-------------------------------------------------------------------------------------------------------------')
 
 # analyse des données
-print(df.describe())
+# premiere ligne
+print("5 premieres ligne")
+print(df.head())
 print('-------------------------------------------------------------------------------------------------------------')
 
-print(df.info())
-
+# derniere ligne
+print("5 dernieres ligne")
+print(df.tail())
 print('-------------------------------------------------------------------------------------------------------------')
+
+# noms de colonnes
+print("nombre de colonnes")
+print(df.columns)
+
+# nombre de lignes et de colonnes
+print("nombre de lignes et de colonnes")
+print(df.shape)
+
+
+
+
+
 
 
 
