@@ -1,10 +1,10 @@
 ID,Name,Age,Gender,Income,Marital_Status,Occupation,Education,Residence,Number_of_Children
 1,John Doe,34,Male,55000,Single,Engineer,Bachelor,Urban,0
-2,Jane Smith,28,Female,48000,Married,Teacher,Master,Suburban,2
-3,Bob Johnson,45,Male,62000,Married,Manager,Bachelor,Rural,3
-4,Emily Davis,23,Female,35000,Single,Student,Bachelor,Urban,0
-5,Michael Brown,36,Male,72000,Divorced,Consultant,Master,Suburban,1
-6,Sarah Wilson,29,Female,54000,Married,Designer,Bachelor,Urban,0
+2,Jane Smith,28,Female,,Married,Teacher,Master,Suburban,2
+3,Bob Johnson,45,,62000,Married,Manager,Bachelor,Rural,3
+4,Emily Davis,23,Female,35000,,Student,,Urban,0
+5,Michael Brown,36,Male,72000,Divorced,Consultant,Master,,1
+6,Sarah Wilson,29,Female,54000,Married,Designer,Bachelor,Urban,
 7,David Lee,50,Male,96000,Married,Director,PhD,Suburban,4
 8,Laura White,39,Female,67000,Single,Analyst,Master,Rural,1
 9,James Harris,31,Male,58000,Single,Developer,Bachelor,Urban,0

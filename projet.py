@@ -1,35 +1,37 @@
+import streamlit as st
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 
+# Titre de l'application
+st.title('Data Mining')
+st.subheader('Analyse de données')
 # Importation des données
 df = pd.read_csv('data.csv')
-print(df)
-print('-------------------------------------------------------------------------------------------------------------')
 
-# analyse des données
-# premiere ligne
-print("5 premieres ligne")
-print(df.head())
-print('-------------------------------------------------------------------------------------------------------------')
+# Affichage des données
+st.write("Données importées :")
+st.write(df)
+st.write('-------------------------------------------------------------------------------------------------------------')
 
-# derniere ligne
-print("5 dernieres ligne")
-print(df.tail())
-print('-------------------------------------------------------------------------------------------------------------')
+# Analyse des données
+# Première ligne
+st.write("5 premières lignes :")
+st.write(df.head())
+st.write('-------------------------------------------------------------------------------------------------------------')
 
-# noms de colonnes
-print("nombre de colonnes")
-print(df.columns)
+# Dernière ligne
+st.write("5 dernières lignes :")
+st.write(df.tail())
+st.write('-------------------------------------------------------------------------------------------------------------')
 
-# nombre de lignes et de colonnes
-print("nombre de lignes et de colonnes")
-print(df.shape)
+# Noms de colonnes
+st.write("Noms des colonnes :")
+st.write(df.columns)
 
+# Nombre de lignes et de colonnes
+st.write("Nombre de lignes et de colonnes :")
+st.write(df.shape)
 
-
-
-
-
-
-
+# Nombre de valeurs nulles
+st.write("Nombre de valeurs nulles :")
+st.write(df.isnull().sum())
