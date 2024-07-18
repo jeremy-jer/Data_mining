@@ -73,6 +73,7 @@ def main():
                 Knn = KNNImputer(n_neighbors=5)
                 df[:] = Knn.fit_transform(df)
                 st.write(df.head())
+                st.write(df.isnull().sum())
 
 if __name__ == "__main__":
     main()
