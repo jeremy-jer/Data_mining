@@ -10,6 +10,7 @@ from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, accuracy_score
+import numpy as np
 
 def convert_columns(df):
     for col in df.columns:
@@ -211,6 +212,46 @@ def main():
                     model.fit(X_train, y_train)
                     y_pred = model.predict(X_test)
                     st.write(f"Accuracy: {accuracy_score(y_test, y_pred)}")
+
+        elif partie == 'Learning Evaluation':
+            st.subheader("Learning Evaluation")
+
+            clustering_algo = st.selectbox("Choisissez l'algorithme de clustering à évaluer", ['K-means', 'DBSCAN'])
+
+            if clustering_algo == 'K-means':
+                n_clusters = st.number_input("Nombre de clusters", min_value=1, value=3)
+                kmeans = KMeans(n_clusters=n_clusters)
+                imputer = SimpleImputer(strategy='mean')
+                df_imputed = pd.DataFrame(imputer.fit_transform(df.select_dtypes(include=[int, float])), columns=df.select_dtypes(include=[int, float]).columns)
+                clusters = kmeans.fit_predict(df_imputed)
+                df['Cluster'] = clusters
+
+                fig = px.scatter_matrix(df, dimensions=df_imputed.columns, color='Cluster', title="Visualisation des clusters K-means")
+                st.plotly_chart(fig)
+
+                st.write("Statistiques des clusters:")
+                st.write("Nombre de points de données dans chaque cluster:", np.bincount(clusters))
+                st.write("Centres des clusters:", kmeans.cluster_centers_)
+
+            elif clustering_algo == 'DBSCAN':
+                eps = st.number_input("Valeur de epsilon", min_value=0.1, value=0.5)
+                min_samples = st.number_input("Nombre minimum d'échantillons", min_value=1, value=5)
+                dbscan = DBSCAN(eps=eps, min_samples=min_samples)
+                imputer = SimpleImputer(strategy='mean')
+                df_imputed = pd.DataFrame(imputer.fit_transform(df.select_dtypes(include=[int, float])), columns=df.select_dtypes(include=[int, float]).columns)
+                clusters = dbscan.fit_predict(df_imputed)
+                df['Cluster'] = clusters
+
+                fig = px.scatter_matrix(df, dimensions=df_imputed.columns, color='Cluster', title="Visualisation des clusters DBSCAN")
+                st.plotly_chart(fig)
+
+                unique, counts = np.unique(clusters, return_counts=True)
+                st.write("Statistiques des clusters:")
+                st.write("Nombre de points de données dans chaque cluster:", dict(zip(unique, counts)))
+                st.write("Densité des clusters:")
+                for cluster in unique:
+                    if cluster != -1:
+                        st.write(f"Cluster {cluster}: {counts[cluster] / len(clusters[clusters == cluster])}")
 
 if __name__ == "__main__":
     main()
