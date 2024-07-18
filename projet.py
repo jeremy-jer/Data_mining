@@ -157,7 +157,7 @@ def main():
                     min_samples = st.number_input("Nombre minimum d'échantillons", min_value=1, value=5)
                     dbscan = DBSCAN(eps=eps, min_samples=min_samples)
 
-                    # Handle missing values before clustering
+
                     imputer = SimpleImputer(strategy='mean')
                     df_imputed = pd.DataFrame(imputer.fit_transform(df.select_dtypes(include=[int, float])), columns=df.select_dtypes(include=[int, float]).columns)
 
