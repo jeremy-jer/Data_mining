@@ -19,3 +19,4 @@ ID,Name,Age,Gender,Income,Marital_Status,Occupation,Education,Residence,Number_o
 18,Michelle Adams,30,Female,53000,Divorced,Chef,Associate,Rural,1
 19,Kevin Baker,43,Male,85000,Married,Doctor,PhD,Urban,3
 20,Angela Mitchell,37,Female,63000,Married,Pharmacist,Master,Suburban,2
+,,,,,,,,,,
