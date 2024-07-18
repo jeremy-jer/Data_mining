@@ -18,7 +18,7 @@ def main():
     file = st.file_uploader("Uploader un fichier CSV", type=["csv"])
 
     st.sidebar.header('Menu')
-    partie = st.sidebar.radio("Titre des parties", ('Data Pre-processing and Cleaning', 'Visualization of the cleaned data', 'Clustering or Prediction', 'Learning Evaluation'))    
+    partie = st.sidebar.radio("Titre des parties", ('Data Pre-processing and Cleaning', 'Visualization of the cleaned data', 'Clustering or Prediction', 'Learning Evaluation'))
 
     df = None
 
@@ -31,7 +31,7 @@ def main():
             st.error(f"Erreur lors de la lecture du fichier: {e}")
         except Exception as e:
             st.error(f"Une erreur est survenue: {e}")
-    
+
     if df is not None:
         if partie == 'Data Pre-processing and Cleaning':
             st.subheader("Aperçu des données")
@@ -71,7 +71,7 @@ def main():
                 try:
                     numeric_df = df.select_dtypes(include=[int, float])
                     non_numeric_df = df.select_dtypes(exclude=[int, float])
-                    
+
                     if numeric_df.isnull().sum().sum() == 0:
                         st.write("Il n'y a pas de valeurs manquantes dans les colonnes numériques.")
                     else:
