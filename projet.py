@@ -1,7 +1,10 @@
+from matplotlib import pyplot as plt
 import streamlit as st
 import pandas as pd
+import seaborn as sns
+import plotly.express as px
 from sklearn.impute import KNNImputer
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from sklearn.preprocessing import MinMaxScaler, Normalizer, RobustScaler, StandardScaler
 
 def convert_columns(df):
     for col in df.columns:
@@ -12,9 +15,10 @@ def convert_columns(df):
     return df
 
 def main():
-    st.title("Data mining")
+    st.title("Data Mining")
 
     st.subheader("Chargement des données")
+    delimiter = st.text_input("Spécifiez le délimiteur pour le fichier CSV (par défaut ;)", value=';')
     file = st.file_uploader("Uploader un fichier CSV", type=["csv"])
 
     st.sidebar.header('Menu')
@@ -24,7 +28,7 @@ def main():
 
     if file is not None:
         try:
-            df = pd.read_csv(file, on_bad_lines='skip', sep=';', low_memory=False)
+            df = pd.read_csv(file, on_bad_lines='skip', sep=delimiter, low_memory=False)
             st.success("Fichier chargé avec succès")
             df = convert_columns(df)
         except pd.errors.ParserError as e:
@@ -46,13 +50,11 @@ def main():
             st.write("Liste des colonnes :", df.columns.tolist())
             st.write("Nombre de valeurs manquantes par colonne :")
             st.write(df.isnull().sum())
-
             st.write("Description de la moyenne, la médiane, l'écart-type.... ")
             st.write(df.describe())
 
-        elif partie == 'Visualization of the cleaned data':
             st.write("Quelle opération voulez-vous faire ? ")
-            choix = st.selectbox('Choix', ['Supprimer les lignes', 'Supprimer les colonnes', 'Remplacer les valeurs nulles', 'Imputer par KNN', 'Normalisation des données'])
+            choix = st.selectbox('Choix', ['Supprimer les lignes', 'Supprimer les colonnes', 'Remplacer les valeurs nulles par la moyenne', 'Imputer par KNN', 'Normalisation des données'])
 
             if choix == 'Supprimer les lignes':
                 st.write("Suppression de lignes")
@@ -66,8 +68,9 @@ def main():
                 st.write("Remplacement des valeurs nulles")
                 df = df.fillna(df.mean())
                 st.write(df.head())
-            elif choix == 'Remplacer par KNN':
-                st.write("KNN")
+
+            elif choix == 'Imputer par KNN':
+                st.write("Imputation par KNN")
                 try:
                     numeric_df = df.select_dtypes(include=[int, float])
                     non_numeric_df = df.select_dtypes(exclude=[int, float])
@@ -84,7 +87,7 @@ def main():
 
             elif choix == 'Normalisation des données':
                 st.write("Choisir une méthode de normalisation")
-                method = st.selectbox('Méthode de normalisation', ['Min-Max', 'Z-score'])
+                method = st.selectbox('Méthode de normalisation', ['Min-Max', 'Z-score', 'Decimal scaling', 'Feature Scaling'])
 
                 try:
                     numeric_df = df.select_dtypes(include=[int, float])
@@ -94,6 +97,10 @@ def main():
                         scaler = MinMaxScaler()
                     elif method == 'Z-score':
                         scaler = StandardScaler()
+                    elif method == 'Decimal scaling':
+                        scaler = RobustScaler()
+                    elif method == 'Feature Scaling':
+                        scaler = Normalizer()
 
                     scaled_data = scaler.fit_transform(numeric_df)
                     df_scaled = pd.DataFrame(scaled_data, columns=numeric_df.columns)
@@ -101,6 +108,27 @@ def main():
                     st.write(df.head())
                 except Exception as e:
                     st.error(f"Erreur lors de la normalisation des données: {e}")
+
+        elif partie == 'Visualization of the cleaned data':
+            type_graphe = st.selectbox("Quel graphe vous voulez utiliser pour analyser vos courbes", ['Histogrammes', 'Box plot'])
+
+            if type_graphe == 'Histogrammes':
+                st.subheader("Histogrammes à variables")
+                for col in df.columns:
+                    if df[col].dtype in ['int64', 'float64']:
+                        fig = px.histogram(df, x=col, nbins=30, title=f'Histogramme de {col}')
+                        st.plotly_chart(fig)
+
+            elif type_graphe == 'Box plot':
+                st.subheader("Box plots")
+                for col in df.columns:
+                    if df[col].dtype in ['int64', 'float64']:
+                        fig = px.box(df, y=col, title=f'Box plot de {col}')
+                        st.plotly_chart(fig)
+
+        elif partie == 'Clustering or Prediction':
+            st.subheader("Clustering ou prédiction")
+            st.write("Fonctionnalité à implémenter")
 
 if __name__ == "__main__":
     main()
