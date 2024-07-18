@@ -3,8 +3,13 @@ import streamlit as st
 import pandas as pd
 import seaborn as sns
 import plotly.express as px
-from sklearn.impute import KNNImputer
+from sklearn.impute import KNNImputer, SimpleImputer
 from sklearn.preprocessing import MinMaxScaler, Normalizer, RobustScaler, StandardScaler
+from sklearn.cluster import KMeans, DBSCAN
+from sklearn.linear_model import LinearRegression, LogisticRegression
+from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, accuracy_score
 
 def convert_columns(df):
     for col in df.columns:
@@ -15,9 +20,10 @@ def convert_columns(df):
     return df
 
 def main():
-    st.title("Data Mining")
+    st.title("Data Mining Application")
 
     st.subheader("Chargement des données")
+
     delimiter = st.text_input("Spécifiez le délimiteur pour le fichier CSV (par défaut ;)", value=';')
     file = st.file_uploader("Uploader un fichier CSV", type=["csv"])
 
@@ -50,11 +56,12 @@ def main():
             st.write("Liste des colonnes :", df.columns.tolist())
             st.write("Nombre de valeurs manquantes par colonne :")
             st.write(df.isnull().sum())
+
             st.write("Description de la moyenne, la médiane, l'écart-type.... ")
             st.write(df.describe())
 
             st.write("Quelle opération voulez-vous faire ? ")
-            choix = st.selectbox('Choix', ['Supprimer les lignes', 'Supprimer les colonnes', 'Remplacer les valeurs nulles par la moyenne', 'Imputer par KNN', 'Normalisation des données'])
+            choix = st.selectbox('Choix', ['Supprimer les lignes', 'Supprimer les colonnes', 'Remplacer les valeurs nulles', 'Imputer par KNN', 'Normalisation des données'])
 
             if choix == 'Supprimer les lignes':
                 st.write("Suppression de lignes")
@@ -127,8 +134,83 @@ def main():
                         st.plotly_chart(fig)
 
         elif partie == 'Clustering or Prediction':
-            st.subheader("Clustering ou prédiction")
-            st.write("Fonctionnalité à implémenter")
+            task = st.selectbox("Sélectionnez une tâche", ['Clustering', 'Prediction'])
+
+            if task == 'Clustering':
+                st.subheader("Clustering")
+                algorithm = st.selectbox("Sélectionnez un algorithme de clustering", ['K-means', 'DBSCAN'])
+
+                if algorithm == 'K-means':
+                    n_clusters = st.number_input("Nombre de clusters", min_value=1, value=3)
+                    kmeans = KMeans(n_clusters=n_clusters)
+
+                    imputer = SimpleImputer(strategy='mean')
+                    df_imputed = pd.DataFrame(imputer.fit_transform(df.select_dtypes(include=[int, float])), columns=df.select_dtypes(include=[int, float]).columns)
+
+                    df['Cluster'] = kmeans.fit_predict(df_imputed)
+                    st.write(df.head())
+                    fig = px.scatter_matrix(df, dimensions=df_imputed.columns, color='Cluster')
+                    st.plotly_chart(fig)
+
+                elif algorithm == 'DBSCAN':
+                    eps = st.number_input("Valeur de epsilon", min_value=0.1, value=0.5)
+                    min_samples = st.number_input("Nombre minimum d'échantillons", min_value=1, value=5)
+                    dbscan = DBSCAN(eps=eps, min_samples=min_samples)
+
+                    # Handle missing values before clustering
+                    imputer = SimpleImputer(strategy='mean')
+                    df_imputed = pd.DataFrame(imputer.fit_transform(df.select_dtypes(include=[int, float])), columns=df.select_dtypes(include=[int, float]).columns)
+
+                    df['Cluster'] = dbscan.fit_predict(df_imputed)
+                    st.write(df.head())
+                    fig = px.scatter_matrix(df, dimensions=df_imputed.columns, color='Cluster')
+                    st.plotly_chart(fig)
+
+            elif task == 'Prediction':
+                st.subheader("Prediction")
+                problem_type = st.selectbox("Sélectionnez un type de problème", ['Regression', 'Classification'])
+
+                target = st.selectbox("Sélectionnez la variable cible", df.columns)
+
+                if problem_type == 'Regression':
+                    algorithm = st.selectbox("Sélectionnez un algorithme de régression", ['Linear Regression', 'Random Forest Regressor'])
+
+                    X = df.drop(columns=[target]).select_dtypes(include=[int, float])
+                    y = df[target]
+
+                    imputer = SimpleImputer(strategy='mean')
+                    X_imputed = pd.DataFrame(imputer.fit_transform(X), columns=X.columns)
+
+                    X_train, X_test, y_train, y_test = train_test_split(X_imputed, y, test_size=0.2, random_state=42)
+
+                    if algorithm == 'Linear Regression':
+                        model = LinearRegression()
+                    elif algorithm == 'Random Forest Regressor':
+                        model = RandomForestRegressor()
+
+                    model.fit(X_train, y_train)
+                    y_pred = model.predict(X_test)
+                    st.write(f"Mean Squared Error: {mean_squared_error(y_test, y_pred)}")
+
+                elif problem_type == 'Classification':
+                    algorithm = st.selectbox("Sélectionnez un algorithme de classification", ['Logistic Regression', 'Random Forest Classifier'])
+
+                    X = df.drop(columns=[target]).select_dtypes(include=[int, float])
+                    y = df[target]
+
+                    imputer = SimpleImputer(strategy='mean')
+                    X_imputed = pd.DataFrame(imputer.fit_transform(X), columns=X.columns)
+
+                    X_train, X_test, y_train, y_test = train_test_split(X_imputed, y, test_size=0.2, random_state=42)
+
+                    if algorithm == 'Logistic Regression':
+                        model = LogisticRegression(max_iter=1000)
+                    elif algorithm == 'Random Forest Classifier':
+                        model = RandomForestClassifier()
+
+                    model.fit(X_train, y_train)
+                    y_pred = model.predict(X_test)
+                    st.write(f"Accuracy: {accuracy_score(y_test, y_pred)}")
 
 if __name__ == "__main__":
     main()
