@@ -35,3 +35,5 @@ st.write(df.shape)
 # Nombre de valeurs nulles
 st.write("Nombre de valeurs nulles :")
 st.write(df.isnull().sum())
+
+
